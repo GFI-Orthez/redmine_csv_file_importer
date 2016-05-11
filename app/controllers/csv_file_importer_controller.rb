@@ -503,7 +503,7 @@ class CsvFileImporterController < ApplicationController
 				issue.start_date = row[attrs_map["start_date"]] || issue.start_date
 				issue.due_date = row[attrs_map["due_date"]] || issue.due_date
 				issue.assigned_to_id = assigned_to != nil ? assigned_to.id : issue.assigned_to_id
-				issue.fixed_version_id = fixed_version_id != nil ? fixed_version.id : issue.fixed_version_id
+				issue.fixed_version_id = fixed_version_id != nil ? fixed_version_id : issue.fixed_version_id
 				issue.done_ratio = row[attrs_map["done_ratio"]] || issue.done_ratio
 				issue.estimated_hours = row[attrs_map["estimated_hours"]] || issue.estimated_hours
 
