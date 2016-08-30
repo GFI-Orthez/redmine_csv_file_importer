@@ -97,7 +97,7 @@ class CsvFileImporterController < ApplicationController
 					flash[:warning] = "Column name empty error"
 				end
 			    # header encoding
-			    @headers[num].to_s.force_encoding("utf-8")
+			    @headers[num] = @headers[num].to_s.encode("utf-8")
 			end
 		end
 
