@@ -24,8 +24,7 @@ class CsvFileImporterController < ApplicationController
 		:start_date, :due_date, :done_ratio, :estimated_hours,
 		:parent_issue, :watchers, :created_on ]
 
-	TIME_ENTRY_ATTRS = [:issue_id, :comments, :activity_id, :spent_on, :hours,
-		:user_id, :gct_tpscra]
+	TIME_ENTRY_ATTRS = [:issue_id, :comments, :activity_id, :spent_on, :hours, :user_id]
 
 	def index
 	end
@@ -98,7 +97,7 @@ class CsvFileImporterController < ApplicationController
 					flash[:warning] = "Column name empty error"
 				end
 			    # header encoding
-			    @headers[num].to_s.force_encoding("utf-8")
+			    @headers[num] = @headers[num].to_s.encode("utf-8")
 			end
 		end
 
@@ -709,11 +708,6 @@ class CsvFileImporterController < ApplicationController
 			errors << "<br>"
 		end
 
-		if attrs_map["gct_tpscra"].nil?
-			errors << l(:error_tpscra_not_defined)
-			errors << "<br>"
-		end
-
 		logger.info "[CsvFileImporterController.import_time_entries] Errors ##{errors.size}"
 		if errors.size > 0 
 			logger.info "[CsvFileImporterController.import_time_entries] Errors : " + errors.to_s
@@ -740,8 +734,7 @@ class CsvFileImporterController < ApplicationController
 			  	row[attrs_map["hours"]].blank? ||
 			  	row[attrs_map["activity_id"]].blank? ||
 			  	row[attrs_map["user_id"]].blank? ||
-			  	row[attrs_map["spent_on"]].blank? ||
-			  	row[attrs_map["gct_tpscra"]].blank? 
+			  	row[attrs_map["spent_on"]].blank?
 
 			  	@failed_count += 1
 			  	@failed_events[@failed_count] = row
@@ -791,7 +784,6 @@ class CsvFileImporterController < ApplicationController
 		      #time.activity = activity_id
 		      time.activity = TimeEntryActivity.find_by_name(row[attrs_map["activity_id"]].strip)
 		      time.hours = row[attrs_map["hours"]]
-		      time.gct_tpscra = row[attrs_map["gct_tpscra"]]
 		      
 		      # Truncate comments to 255 chars
 		      time.comments = row[attrs_map["comments"]].mb_chars[0..255].strip.to_s if row[attrs_map["comments"]].present?
